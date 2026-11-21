@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mata Jeli — Cari Perbedaan</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">👁️</span>
+      <div class="brand-text">
+        <h1>MATA JELI</h1>
+        <p>Cari Perbedaan</p>
+      </div>
+    </div>
+    <div id="hud" class="hidden">
+      <div class="hud-item">
+        <span class="hud-label">Level</span>
+        <span id="hud-level" class="hud-value">1 · Taman Pagi</span>
+      </div>
+      <div class="hud-item counter">
+        <span class="hud-label">Ketemu</span>
+        <span id="hud-found" class="hud-value big">0 / 7</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">Skor</span>
+        <span id="hud-score" class="hud-value">0</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">Waktu</span>
+        <span id="hud-time" class="hud-value">3:00</span>
+      </div>
+      <div id="timebar"><div id="timebar-fill"></div></div>
+    </div>
+    <div class="top-actions">
+      <button id="btn-sound" class="icon-btn" title="Suara (M)">🔊</button>
+      <button id="btn-help" class="icon-btn" title="Cara main">?</button>
+    </div>
+  </header>
+
+  <main id="stage">
+    <div id="boards">
+      <figure class="panel" id="panel-left">
+        <canvas id="canvas-left" width="640" height="420"></canvas>
+        <figcaption>Gambar A</figcaption>
+      </figure>
+      <div id="versus">
+        <span id="versus-badge">VS</span>
+        <span id="versus-note">7 perbedaan</span>
+      </div>
+      <figure class="panel" id="panel-right">
+        <canvas id="canvas-right" width="640" height="420"></canvas>
+        <figcaption>Gambar B</figcaption>
+      </figure>
+    </div>
+    <div id="toast" class="hidden"></div>
+    <div id="controls">
+      <button id="btn-hint" class="btn">💡 Hint <span id="hint-count">(3)</span> <kbd>H</kbd></button>
+      <button id="btn-pause" class="btn">⏸ Jeda <kbd>P</kbd></button>
+      <button id="btn-restart" class="btn">↻ Ulangi Level <kbd>R</kbd></button>
+      <button id="btn-levels" class="btn">☰ Level</button>
+    </div>
+  </main>
+
+  <div id="overlay-start" class="overlay">
+    <div class="card">
+      <div class="card-eyebrow">GAME CARI PERBEDAAN</div>
+      <h2>Mata Jeli</h2>
+      <p class="card-sub">Dua gambar hampir sama. Temukan <strong>7 perbedaan</strong> sebelum waktu habis!</p>
+      <div class="howto">
+        <div><span>🖱️</span> Klik perbedaan di gambar A atau B</div>
+        <div><span>💡</span> Hint menandai satu perbedaan yang belum ketemu</div>
+        <div><span>⏱️</span> Klik salah mengurangi 5 detik</div>
+      </div>
+      <div id="level-picker" class="level-picker"></div>
+      <button id="btn-play" class="btn primary big">▶ Mulai Main</button>
+      <p class="card-foot">Gambar digambar langsung di dalam game — tanpa unduhan, tanpa internet.</p>
+    </div>
+  </div>
+
+  <div id="overlay-win" class="overlay hidden">
+    <div class="card">
+      <div class="card-eyebrow">LEVEL SELESAI!</div>
+      <div id="win-stars" class="stars">★★★</div>
+      <h2 id="win-title">Hebat!</h2>
+      <p id="win-detail" class="card-sub"></p>
+      <div id="win-score" class="score-line"></div>
+      <button id="btn-next" class="btn primary big">Level Berikutnya ▶</button>
+      <button id="btn-replay" class="btn">↻ Main Lagi</button>
+    </div>
+  </div>
+
+  <div id="overlay-timeout" class="overlay hidden">
+    <div class="card">
+      <div class="card-eyebrow">WAKTU HABIS</div>
+      <h2>Yah, belum ketemu semua</h2>
+      <p id="timeout-detail" class="card-sub"></p>
+      <button id="btn-retry" class="btn primary big">↻ Coba Lagi</button>
+      <button id="btn-timeout-levels" class="btn">☰ Pilih Level</button>
+    </div>
+  </div>
+
+  <div id="overlay-pause" class="overlay hidden">
+    <div class="card">
+      <div class="card-eyebrow">JEDA</div>
+      <h2>Istirahat sebentar</h2>
+      <p class="card-sub">Waktu berhenti. Tarik napas, lalu lanjut berburu!</p>
+      <button id="btn-resume" class="btn primary big">▶ Lanjutkan</button>
+    </div>
+  </div>
+
+  <div id="overlay-done" class="overlay hidden">
+    <div class="card">
+      <div class="card-eyebrow">SEMUA LEVEL SELESAI!</div>
+      <div class="stars">🏆</div>
+      <h2>Kamu Mata Jeli Sejati!</h2>
+      <p class="card-sub">Ketiga taman, pantai, dan pasar malam sudah kamu taklukkan.</p>
+      <div id="done-score" class="score-line"></div>
+      <button id="btn-again" class="btn primary big">↻ Main dari Awal</button>
+    </div>
+  </div>
+
+  <div id="overlay-help" class="overlay hidden">
+    <div class="card">
+      <div class="card-eyebrow">CARA MAIN</div>
+      <h2>Cari 7 perbedaan</h2>
+      <p class="card-sub">Gambar A dan gambar B hampir sama persis — tapi ada 7 hal yang berbeda. Klik bagian yang berbeda di gambar mana saja.</p>
+      <div class="howto">
+        <div><span>✅</span> Klik benar: +100 poin, lingkaran emas menandai tempatnya</div>
+        <div><span>❌</span> Klik salah: −5 detik dan layar sedikit bergoyang</div>
+        <div><span>💡</span> Tombol Hint (H): menunjukkan satu perbedaan, 3 kali per level</div>
+        <div><span>⌨️</span> P = jeda · R = ulangi level · M = suara mati/hidup</div>
+      </div>
+      <button id="btn-close-help" class="btn primary big">Mengerti!</button>
+    </div>
+  </div>
+</div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
